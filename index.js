@@ -22,6 +22,7 @@ var ScrollableTabView = React.createClass({
 
   getInitialState() {
     return { currentPage: 0, scrollValue: new Animated.Value(0) };
+    return { currentPage: 0, scrollValue: new Animated.Value(0) };
   },
 
   componentWillMount() {
@@ -67,6 +68,7 @@ var ScrollableTabView = React.createClass({
         // to the left (-x)
         var offsetX = dx - (this.state.currentPage * deviceWidth);
         this.state.scrollValue.setValue(-1 * offsetX / deviceWidth);
+        this.state.scrollValue.setValue(-1 * offsetX / deviceWidth);
       },
     });
   },
@@ -80,6 +82,7 @@ var ScrollableTabView = React.createClass({
       currentPage: pageNumber
     });
 
+    Animated.spring(this.state.scrollValue, {toValue: pageNumber, friction: 10, tension: 50}).start();
     Animated.spring(this.state.scrollValue, {toValue: pageNumber, friction: 10, tension: 50}).start();
   },
 
@@ -104,14 +107,14 @@ var ScrollableTabView = React.createClass({
       inputRange: [0, 1], outputRange: [0, -deviceWidth]
     });
 
-    return (
-      <View style={{flex: 1}}>
+    return ( // 开放属性style
+      <View style={[{flex: 1}, this.props.style]}>
         {this.renderTabBar({goToPage: this.goToPage,
                             tabs: this.props.children.map((child) => child.props.tabLabel),
                             activeTab: this.state.currentPage,
                             scrollValue: this.state.scrollValue})}
-
-        <Animated.View style={[sceneContainerStyle, {transform: [{translateX}]}]}
+        {/* 开放属性contentContainerStyle */}
+        <Animated.View style={[sceneContainerStyle, this.props.contentContainerStyle, {transform: [{translateX}]}]}
           {...this._panResponder.panHandlers}>
           {this.props.children}
         </Animated.View>
